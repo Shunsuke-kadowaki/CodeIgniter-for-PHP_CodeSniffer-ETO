@@ -88,6 +88,11 @@ class CodeIgniter_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffe
     private function _checkCommentStyle(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
+
+        $cmt = $tokens[$stackPtr]['content'];
+        if($this->beginsWith($cmt, '/* End of file')) return TRUE;
+        if($this->beginsWith($cmt, '/* Location:')) return TRUE;
+
         if ($tokens[$stackPtr]['content']{0} === '#') {
             $error  = 'Perl-style comments are not allowed; use "// Comment" or DocBlock comments instead';
             $phpcsFile->addError($error, $stackPtr, 'WrongStyle');
@@ -176,6 +181,17 @@ class CodeIgniter_Sniffs_Commenting_InlineCommentSniff implements PHP_CodeSniffe
 
         return $hasBlankLinesAround;
     }//end _checkBlanksAroundLongComment()
+
+    /**
+     * Internal unil function
+     *
+     * @param  String   $str    Haystack
+     * @param  String   $sub    Needle
+     * @return Boolean          True if Haystack begins with needle
+     */
+    private function beginsWith($str, $sub) {
+        return (strncmp($str, $sub, strlen($sub)) == 0);
+    }
 
 }//end class
 
