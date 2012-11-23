@@ -2,6 +2,14 @@
 
 Provides sniffs for [PHP_CodeSniffer 1.3.0 and above](http://www.squizlabs.com/php-codesniffer) to check [CodeIgniter coding standard](http://codeigniter.com/user_guide/general/styleguide.html).
 
+## Background
+I found Thomas ERNEST initiative to provide PHP_CodeSniffer rules for CodeIgniter. While this is a truely great thing, I would get two types of false positives from my scans:
+* CodeIgniters end of file comments are usually made with multi line (/* ... */) style comments. In the original CodeIgniter ruleset, multi line comments are not allowed unless they are docBlock style comments. I've modified this so that multi line comments are allowed if they begin with "End of file" or "Location:"
+* In most (all?) class files, CodeIgniter have a one row check for BASEPATH on the same row as the PHP opening tag. This practice would make the check for an existing and valid file doc comment fail. 
+
+### Warning
+This repo exists mostly so that I can automate setting up my own build environment, but you are free to use it as you see fit. But if Thomas Ernest adopts my changes into his repo, I may remove this repo.
+
 ## A bit of story
 
 ### PHP_CodeSniffer
