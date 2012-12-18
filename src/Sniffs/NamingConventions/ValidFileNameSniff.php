@@ -61,6 +61,13 @@ class CodeIgniter_Sniffs_NamingConventions_ValidFileNameSniff implements PHP_Cod
         $fileNameAndExt = basename($fullPath);
         $fileName = substr($fileNameAndExt, 0, strrpos($fileNameAndExt, '.'));
 
+	    // CodeIgniter expects Capialized file names for Libraries...
+	    // dirty heuristics to understand if we're dealing with a library
+	    if(strpos($fullPath, '/libraries/') !== FALSE)
+	    {
+		    $expectedFileName = ucfirst($expectedFileName);
+	    }
+
         if ($expectedFileName !== $fileName) {
             $errorTemplate = 'Filename "%s" doesn\'t match the name of the %s that it contains "%s" in lower case. "%s" was expected.';
             $errorMessage = sprintf(
