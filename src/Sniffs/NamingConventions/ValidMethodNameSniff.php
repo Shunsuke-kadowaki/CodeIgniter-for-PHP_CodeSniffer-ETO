@@ -61,6 +61,12 @@ class CodeIgniter_Sniffs_NamingConventions_ValidMethodNameSniff extends PHP_Code
                                'clone',
                               );
 
+    // A bi of a hack to allow some established CodeIgniter stuff
+    // I.e Gas-ORM that looks for public method _init....
+    protected static $allowedPublicMethodNames = array(
+                               '_init');
+
+
     /**
      * Defines which token(s) in which scope(s) will be proceed.
      */
@@ -133,13 +139,15 @@ class CodeIgniter_Sniffs_NamingConventions_ValidMethodNameSniff extends PHP_Code
 
         // If it's not a private method, it must not have an underscore on the front.
         if ($scope !== 'private' && $methodName{0} === '_') {
-            if (true === $scopeSpecified) {
-                $error = "Public method name \"$className::$methodName\" must not be prefixed with an underscore";
-            } else {
-                $error = ucfirst($scope)." method name \"$className::$methodName\" must not be prefixed with an underscore";
+            if(in_array($methodName, self::$allowedPublicMethodNames) === false) {
+                if (true === $scopeSpecified) {
+                    $error = "Public method name \"$className::$methodName\" must not be prefixed with an underscore";
+                } else {
+                    $error = ucfirst($scope)." method name \"$className::$methodName\" must not be prefixed with an underscore";
+                }
+                $phpcsFile->addError($error, $stackPtr);
+                return;
             }
-            $phpcsFile->addError($error, $stackPtr);
-            return;
         }
 
         // If name is too verbose,
